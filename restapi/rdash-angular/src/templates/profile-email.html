@@ -1,0 +1,62 @@
+<!--
+  ~ Copyright (c) 2016 Kristjan Veskimae
+  ~
+  ~     Permission is hereby granted, free of charge, to any person obtaining
+  ~     a copy of this software and associated documentation files (the "Software"),
+  ~     to deal in the Software without restriction, including without limitation
+  ~     the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~     and/or sell copies of the Software, and to permit persons to whom the Software
+  ~     is furnished to do so, subject to the following conditions:
+  ~
+  ~     The above copyright notice and this permission notice shall be included in
+  ~     all copies or substantial portions of the Software.
+  ~
+  ~     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  ~     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  ~     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<div ng-controller="ProfileEmailCtrl as ProfileEmailCtrl" class="row">
+    <div class="row alerts-container" data-ng-show="AppData.alertsData.alerts.length">
+        <div class="col-xs-12">
+            <uib-alert data-ng-repeat="alert in AppData.alertsData.alerts" type="{{alert.type}}" close="AppData.alertsData.closeAlert($index)">{{alert.msg}}</uib-alert>
+        </div>
+    </div>
+    <div class="col-lg-4" style="height:100%">
+        <rd-widget style="height:100%">
+            <rd-widget-header icon="fa-tasks" title="{{ 'PROFILE_EMAIL_HEADER_TEXT' | translate }} {{AppData.loginData.email}}">
+            </rd-widget-header>
+            <rd-widget-body classes="widget-body large no-padding" style="height:100%">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-responsive">
+                        <tbody class="animate">
+                        <tr>
+                            <td>
+                                <label for="newEmail">{{ 'NEW_EMAIL_LABEL' | translate }}</label>
+                                <input class="form-control" type="email" id="newEmail" name="input" ng-model="ProfileEmailCtrl.emailData.newEmail" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="passwordForChangingEmail">{{ 'PASSWORD_LABEL' | translate }}</label>
+                                <input class="form-control" type="password" id="passwordForChangingEmail" name="input" ng-model="ProfileEmailCtrl.emailData.passwordForChangingEmail" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <button type="button" ng-click="ProfileEmailCtrl.saveEmail();" ng-disabled="!ProfileEmailCtrl.emailData.newEmail || !ProfileEmailCtrl.emailData.passwordForChangingEmail" class="btn btn-success">{{ 'SAVE_BUTTON' | translate }}</button>
+                                <button type="button" ng-click="ProfileEmailCtrl.cancelEditingEmail();" class="btn btn-default">{{ 'CANCEL_BUTTON' | translate }}</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+
+</div>

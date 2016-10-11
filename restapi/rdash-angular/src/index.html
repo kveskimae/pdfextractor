@@ -1,0 +1,180 @@
+<!doctype html>
+<!--
+  ~ Copyright (c) 2016 Kristjan Veskimae
+  ~
+  ~     Permission is hereby granted, free of charge, to any person obtaining
+  ~     a copy of this software and associated documentation files (the "Software"),
+  ~     to deal in the Software without restriction, including without limitation
+  ~     the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~     and/or sell copies of the Software, and to permit persons to whom the Software
+  ~     is furnished to do so, subject to the following conditions:
+  ~
+  ~     The above copyright notice and this permission notice shall be included in
+  ~     all copies or substantial portions of the Software.
+  ~
+  ~     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  ~     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  ~     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<html lang="en" ng-app="RDash">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Dashboard</title>
+  <!-- STYLES -->
+  <!-- build:css lib/css/main.min.css -->
+  <link rel="stylesheet" type="text/css" href="components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="components/rdash-ui/dist/css/rdash.css">
+  <link rel="stylesheet" type="text/css" href="less/styles.css">
+  <!-- endbuild -->
+</head>
+<body ng-controller="MasterCtrl as MasterCtrl" ng-cloak class="ng-cloak">
+<div id="page-wrapper" ng-class="{'open': toggle}" ng-cloak>
+
+  <!-- Sidebar -->
+  <div id="sidebar-wrapper">
+    <ul class="sidebar">
+      <li class="sidebar-main">
+        <a ng-click="toggleSidebar()">
+          {{ 'HEADER_BACK_OFFICE' | translate }}
+          &nbsp;
+          <span class="menu-icon glyphicon glyphicon-transfer"></span>
+        </a>
+      </li>
+      <li class="sidebar-title"><span>{{ 'MENU_NAVIGATION' | translate }}</span></li>
+      <li class="sidebar-list" ng-show="AppData.loginData.loggedIn">
+        <a href="#/dashboard">{{ 'MENU_ITEM_DASHBOARD' | translate }}<span class="menu-icon fa fa-tachometer"></span></a>
+      </li>
+      <li class="sidebar-list" ng-show="AppData.loginData.isReviewer">
+        <a href="#/invoices-pending">{{ 'MENU_ITEM_REVIEW' | translate }}<span class="menu-icon fa fa-tasks"></span></a>
+      </li>
+      <li class="sidebar-list" ng-show="AppData.loginData.isAdmin">
+        <a href="#/clients">{{ 'MENU_ITEM_CLIENTS' | translate }}<span class="menu-icon fa fa-users"></span></a>
+      </li>
+      <li class="sidebar-list" ng-show="AppData.loginData.isAdmin">
+        <a href="#/settings">{{ 'MENU_ITEM_SETTINGS' | translate }}<span class="menu-icon fa fa-cogs"></span></a>
+      </li>
+      <li class="sidebar-list" ng-show="AppData.loginData.isClient">
+        <a href="#/upload">{{ 'MENU_ITEM_UPLOAD' | translate }}<span class="menu-icon fa fa-clone"></span></a>
+      </li>
+      <li class="sidebar-list" ng-show="AppData.loginData.isClient">
+        <a href="#/invoices-trial">{{ 'MENU_ITEM_VIEW_UPLOADED' | translate }}<span class="menu-icon fa fa-th-list"></span></a>
+      </li>
+    </ul>
+    <div class="sidebar-footer">
+      <div class="col-xs-4">
+          <a>Extractor</a>
+      </div>
+    </div>
+  </div>
+  <!-- End Sidebar -->
+
+  <div id="content-wrapper">
+    <div class="page-content">
+
+      <!-- Header Bar -->
+      <div class="row header">
+        <div class="col-xs-12">
+          <div class="user pull-right">
+
+
+            <button class="btn ng-scope" ng-click="changeLanguage('en')" translate="BUTTON_LANG_EN"></button>
+            <button class="btn ng-scope" ng-click="changeLanguage('it')" translate="BUTTON_LANG_IT"></button>
+            &nbsp;&nbsp;&nbsp;
+
+            <!-- Logged in menu -->
+
+            <div data-ng-show="AppData.loginData.loggedIn" class="item dropdown" uib-dropdown>
+              <a href="#" class="dropdown-toggle" uib-dropdown-toggle style="text-decoration: none;">
+                {{AppData.loginData.username}} <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <!--
+                <li class="dropdown-header">
+                </li>
+                <li class="divider"></li>
+                -->
+                <li class="link">
+                    <a href="#/profile">
+                      <i class="fa fa-fw fa-user"></i>
+                      {{ 'MENU_ITEM_PROFILE' | translate }}
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li class="link">
+                  <a href="/rest/logout" class="dropdown-item">
+                    <i class="fa fa-fw fa-power-off"></i>
+                    {{ 'MENU_ITEM_LOGOUT' | translate }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Logged out menu -->
+            <div data-ng-hide="AppData.loginData.loggedIn" class="item">
+              <a href="#/login" class="btn btn-default active">{{ 'MENU_ITEM_LOGIN' | translate }}</a>
+            </div>
+            <!--
+            <div class="item dropdown" uib-dropdown>
+              <a href="#" class="dropdown-toggle" uib-dropdown-toggle>
+                <i class="fa fa-bell-o"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li class="dropdown-header">
+                  Notifications
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="#">test1</a>
+                </li>
+              </ul>
+            </div>
+            -->
+          </div>
+          <div class="meta">
+            <!--
+            <div class="page">
+              &nbsp;
+            </div>
+            -->
+            <div class="breadcrumb-links">
+              <div ncy-breadcrumb></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Header Bar -->
+
+      <!-- Main Content -->
+      <div ui-view></div>
+
+    </div><!-- End Page Content -->
+  </div><!-- End Content Wrapper -->
+</div><!-- End Page Wrapper -->
+
+<!-- SCRIPTS -->
+<!-- build:js lib/js/main.min.js -->
+<script type="text/javascript" src="components/angular/angular.min.js"></script>
+<script type="text/javascript" src="components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script type="text/javascript" src="components/angular-cookies/angular-cookies.min.js"></script>
+<script type="text/javascript" src="components/angular-resource/angular-resource.min.js"></script>
+<script type="text/javascript" src="components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script type="text/javascript" src="components/angular-animate/angular-animate.min.js"></script>
+<script type="text/javascript" src="components/angular-route/angular-route.min.js"></script>
+<script type="text/javascript" src="components/angular-translate/angular-translate.min.js"></script>
+<script type="text/javascript" src="components/ng-lodash/build/ng-lodash.min.js"></script>
+<script type="text/javascript" src="components/ng-file-upload-shim/ng-file-upload-all.min.js"></script>
+<script type="text/javascript" src="components/angular-breadcrumb/release/angular-breadcrumb.min.js"></script>
+<!-- endbuild -->
+<!-- Custom Scripts -->
+<script type="text/javascript" src="js/dashboard.min.js"></script>
+
+</body>
+</html>

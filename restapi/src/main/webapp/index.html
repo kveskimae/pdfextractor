@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016 Kristjan Veskimae
+  ~
+  ~     Permission is hereby granted, free of charge, to any person obtaining
+  ~     a copy of this software and associated documentation files (the "Software"),
+  ~     to deal in the Software without restriction, including without limitation
+  ~     the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~     and/or sell copies of the Software, and to permit persons to whom the Software
+  ~     is furnished to do so, subject to the following conditions:
+  ~
+  ~     The above copyright notice and this permission notice shall be included in
+  ~     all copies or substantial portions of the Software.
+  ~
+  ~     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  ~     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  ~     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>REST API</title>
+    <!-- STYLES -->
+    <link rel="stylesheet" href="bootstrap.css"/>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<div class="blog-header">
+    <div class="container">
+        <h1 class="blog-title">REST API</h1>
+        <p class="lead blog-description">Welcome! The following describes how to test extraction process and integrate your accountancy software.</p>
+    </div>
+</div>
+
+
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+            <div class="blog-post">
+                <h2 class="blog-post-title">Extraction process</h2>
+                <p class="blog-post-meta">June 17, 2016</p>
+                <p>Let us start by describing our overall process of extracting data from invoices (see diagram):</p>
+                <ol>
+                    <li>Bookkeeper uploads PDF invoice file to your accountancy software;</li>
+                    <li>Your system calls our API with this invoice file;</li>
+                    <li>Our extraction algorithm finds the necessary data from invoice;</li>
+                    <li>Layout fingerprint scanner checks if this type of invoice has already been encountered before, and also if all the extracted data was correct last time;</li>
+                    <li>If the layout is not recognized or extraction had mistakes, the extracted data is reviewed by our manual worker;</li>
+                    <li>Depending on the previous steps, the extracted data will be returned immediately with the API call response within a second or in a few hours.</li>
+                </ol>
+            </div><!-- /.blog-post -->
+
+            <div class="blog-post">
+                <h2 class="blog-post-title">Calling API</h2>
+                <p class="blog-post-meta">June 17, 2016</p>
+
+                <h3>Browser REST clients</h3>
+                <p>Our API can be tested with browser REST add-ons.<p>
+                <p>The call must satisfy the following properties:</p>
+                <ul>
+                    <li>It is sent to endpoint address <i>http://194.116.76.99/rest/invoiceworkflows/it</i> ;</li>
+                    <li>HTTP method is <i>POST</i> ;</li>
+                    <li>It must contain a form with multi-part file parameter named <i>file</i> with your invoice file;</li>
+                    <li>The call is sent together with <i>BASIC</i> authentication credentials that were assigned to you.</li>
+                </ul>
+                <p>To get credentials for trial, drop us an email.</p>
+                <h3>Terminal</h3>
+                <p>Or alternatively, here is an example curl-command that can be used from terminal:</p>
+                <code>curl --form "file=@/Users/me/Documents/invoice.pdf" --header "Content-Type:multipart/form-data; boundary=——WebKitFormBoundarySOKoAHop9Sc1EiVF" http://194.116.76.99/rest/invoiceworkflows/it --user username:password</code>
+                <p>Obviously, file location and username/password need to be changed.</p>
+                <h3>Integration</h3>
+                <p>To integrate, you need to call our API from your system. This depends on the programming language you use. See browser REST clients section above for tips.</p>
+
+            </div><!-- /.blog-post -->
+
+
+
+
+
+
+
+            <div class="blog-post">
+                <h2 class="blog-post-title">Using API</h2>
+                <p class="blog-post-meta">June 17, 2016</p>
+
+                <h3>Call response</h3>
+                <p>The call response is a JSON object representing the newly created invoice workflow. It contains the following data of interest:</p>
+                <ul>
+                    <li>State - notifying if the data extraction is done;</li>
+                    <li>ID - location of the created workflow resource, which can be used e.g. to query an incomplete invoice workflow later.</li>
+                </ul>
+                <p>Here is an example call response, a JSON object for unrecognized invoice:</p>
+                <code>{"links":[{"rel":"self","href":"http://194.116.76.99/rest/invoiceworkflows/1"}],"id":1,"locale":"it","state":"pending_review","fileName":"123.pdf"}</code>
+                <h3>State</h3>
+                <p>The returned invoice workflow object can be in one of three states:</p>
+                <ul>
+                    <li><i>pending_review</i> - the workflow was created and is waiting for manual review of extracted data from our worker;</li>
+                    <li><i>completed</i> - the invoice layout was recognized or our worker has completed the review;</li>
+                    <li><i>failed</i> - creating the workflow has failed, either because the invoice file was corrupt or there was an error in our server.</li>
+                </ul>
+                <h3>Querying incomplete workflow</h3>
+                <p>Currently majority of the invoices need a review. These are all API call responses that created a workflow in <i>pending_review</i> state.</p>
+                <p>You need to query the created workflow resource later. A good option is to query periodically, e.g. every ten minutes.</p>
+                <p>The query is following:</p>
+                <ul>
+                    <li>Use the created invoice workflow ID to assemble resource location address <br /><i>http://194.116.76.99/rest/invoiceworkflows/[id]</i><br/> (for the example above you would use <br/><i>http://194.116.76.99/rest/invoiceworkflows/1</i> <br/>);</li>
+                    <li>HTTP method is <i>GET</i>;</li>
+                    <li>The call goes together with <i>BASIC</i> authentication credentials that were assigned to you.</li>
+                </ul>
+                <p>Here is an example of calling from terminal:</p>
+                <code>curl http://194.116.76.99/rest/invoiceworkflows/1 --user username:password</code>
+                <p>Calling from browser REST add-on or your system is a plain HTTP GET call.</p>
+
+                <h3>Parsing extracted data</h3>
+                <p>If the initial API call response or a later periodic query responded with a workflow in <i>completed</i> state, you can also additionally find the extracted data from the workflow object.</p>
+                <p>Here is an example of completed workflow as a response JSON object:</p>
+                <code>{"links":[{"rel":"self","href":"http://194.116.76.99/rest/invoiceworkflows/1"}],"id":1,"locale":"it","state":"completed","fileName":"123.pdf","extractedData":{"ISSUE_DATE":"2016-06-17","TOTAL":31.62,"VATIN":["01234567890","12345678901"],"INVOICE_ID":"12345/16","TOTAL_BEFORE_TAXES":25.92,"NAME":"Test Spa"}}</code>
+                <p>The extracted data is contained in <i>extractedData</i> property with the following fields:</p>
+                <ul>
+                    <li><i>NAME</i> - supplier company name;</li>
+                    <li><i>VATIN</i> - company value added tax identification numbers; the first value in the array is the one that we assign as belonging to supplier, but this can be also further verified in accountancy software itself by checking that it does not belong to the client;</li>
+                    <li><i>ISSUE_DATE</i> - issue date in format <i>[YYYY]-[MM]-[DD]</i>;</li>
+                    <li><i>TOTAL_BEFORE_TAXES</i> - the total sum to be paid before taxes;</li>
+                    <li><i>TOTAL</i> - the total sum to be paid;</li>
+                    <li><i>INVOICE_ID</i> - the ID of invoice.</li>
+                </ul>
+            </div><!-- /.blog-post -->
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+            <div class="sidebar-module sidebar-module-inset">
+                <img src="process.png" align="right">
+            </div>
+        </div><!-- /.blog-sidebar -->
+
+    </div><!-- /.row -->
+
+</div><!-- /.container -->
+
+<footer class="blog-footer">
+    <p>REST API for PDF Extractor</p>
+    <p>
+        <a href="#">Back to top</a>
+    </p>
+</footer>
+
+</body>
+</html>

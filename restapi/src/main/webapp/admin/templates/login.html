@@ -1,0 +1,59 @@
+<!--
+  ~ Copyright (c) 2016 Kristjan Veskimae
+  ~
+  ~     Permission is hereby granted, free of charge, to any person obtaining
+  ~     a copy of this software and associated documentation files (the "Software"),
+  ~     to deal in the Software without restriction, including without limitation
+  ~     the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~     and/or sell copies of the Software, and to permit persons to whom the Software
+  ~     is furnished to do so, subject to the following conditions:
+  ~
+  ~     The above copyright notice and this permission notice shall be included in
+  ~     all copies or substantial portions of the Software.
+  ~
+  ~     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  ~     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  ~     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<div ng-controller="LoginCtrl as LoginCtrl" class="row">
+    <div class="row alerts-container" data-ng-show="AppData.alertsData.alerts.length">
+        <div class="col-xs-12">
+            <uib-alert data-ng-repeat="alert in AppData.alertsData.alerts" type="{{alert.type}}" close="AppData.alertsData.closeAlert($index)">{{alert.msg}}</uib-alert>
+        </div>
+    </div>
+    <div class="col-lg-8" style="height:100%">
+        <rd-widget style="height:100%">
+            <rd-widget-header icon="fa-tasks" title="{{ 'LOGIN_HEADER_TEXT' | translate }}">
+            </rd-widget-header>
+            <rd-widget-body classes="widget-body large no-padding" style="height:100%">
+                        <div class="login-form">
+                            <div class="alert alert-danger" ng-show="LoginCtrl.showError">
+                                {{ 'LOGIN_MSG_TRY_AGAIN' | translate }}
+                            </div>
+                            <!--
+                            ng-submit="LoginCtrl.login()"
+                            method="post" action="/rest/security_check"
+                            -->
+                            <form role="form" ng-submit="LoginCtrl.login()" class="form-horizontal">
+                                <div class="input-group input-sm">
+                                    <label class="input-group-addon" for="j_username"><i class="fa fa-user"></i>{{ 'USERNAME_LABEL' | translate }}</label>
+                                    <input type="text" class="form-control" id="j_username" name="j_username" placeholder="{{ 'LOGIN_USERNAME_PLACEHOLDER' | translate }}" required ng-model="LoginCtrl.credentials.j_username">
+                                </div>
+                                <div class="input-group input-sm">
+                                    <label class="input-group-addon" for="j_password"><i class="fa fa-lock"></i>{{ 'PASSWORD_LABEL' | translate }}</label>
+                                    <input type="password" class="form-control" id="j_password" name="j_password" placeholder="{{ 'LOGIN_PASSWORD_PLACEHOLDER' | translate }}" required ng-model="LoginCtrl.credentials.j_password">
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">{{ 'LOGIN_BUTTON' | translate }}</button>
+                                </div>
+                            </form>
+                        </div>
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+<!--
+  ~ Copyright (c) 2016 Kristjan Veskimae
+  ~
+  ~     Permission is hereby granted, free of charge, to any person obtaining
+  ~     a copy of this software and associated documentation files (the "Software"),
+  ~     to deal in the Software without restriction, including without limitation
+  ~     the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~     and/or sell copies of the Software, and to permit persons to whom the Software
+  ~     is furnished to do so, subject to the following conditions:
+  ~
+  ~     The above copyright notice and this permission notice shall be included in
+  ~     all copies or substantial portions of the Software.
+  ~
+  ~     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  ~     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  ~     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<div ng-controller="ClientStatsCtrl as ClientStatsCtrl" class="row">
+    <div class="row alerts-container" data-ng-show="AppData.alertsData.alerts.length">
+        <div class="col-xs-12">
+            <uib-alert data-ng-repeat="alert in AppData.alertsData.alerts" type="{{alert.type}}" close="AppData.alertsData.closeAlert($index)">{{alert.msg}}</uib-alert>
+        </div>
+    </div>
+    <div class="col-lg-4" style="height:100%">
+        <rd-widget style="height:100%">
+            <rd-widget-header icon="fa-bar-chart" title="{{ 'CLIENT_STATS_HEADER_TEXT_START' | translate }} '{{ClientStatsCtrl.client.username}}'">
+                <button type="button" ng-click="ClientStatsCtrl.cancelEditing();" class="btn btn-default">{{ 'BACK_BUTTON' | translate }}</button>
+            </rd-widget-header>
+            <rd-widget-body classes="widget-body large no-padding" style="height:100%">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-responsive">
+                        <tbody class="animate">
+                        <tr>
+                            <td>
+                                <label for="startDate">{{ 'CLIENT_STATS_START_DATE_LABEL' | translate }}</label>
+                                <input type="date" id="startDate" name="input" ng-model="ClientStatsCtrl.periodDates.startDate">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="endDate">{{ 'CLIENT_STATS_END_DATE_LABEL' | translate }}</label>
+                                <input type="date" id="endDate" name="input" ng-model="ClientStatsCtrl.periodDates.endDate">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <button ng-disabled="!ClientStatsCtrl.periodDates.startDate || !ClientStatsCtrl.periodDates.endDate" type="button" ng-click="ClientStatsCtrl.queryBetweenDates();" class="btn btn-success">{{ 'QUERY_BUTTON' | translate }}</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {{ 'CLIENT_STATS_PERIOD_TOTAL' | translate }} <span>{{ClientStatsCtrl.totalBetweenDates}}</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+    <div class="col-lg-3 col-md-6 col-xs-12">
+        <rd-widget>
+            <rd-widget-body tooltip-placement="bottom"  uib-tooltip="{{ 'CLIENT_STATS_BOX_TOTAL_TOOLTIP' | translate }}">
+                <div class="widget-icon green pull-left">
+                    <i class="fa fa-calendar"></i>
+                </div>
+                <div class="title">{{ClientStatsCtrl.totalNumber}}</div>
+                <div class="comment">{{ 'CLIENT_STATS_BOX_TOTAL' | translate }}</div>
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+    <div class="col-lg-3 col-md-6 col-xs-12">
+        <rd-widget>
+            <rd-widget-body tooltip-placement="bottom"  uib-tooltip="{{ 'CLIENT_STATS_BOX_THIS_MONTH_TOOLTIP' | translate }}">
+                <div class="widget-icon orange pull-left">
+                    <i class="fa fa-files-o"></i>
+                </div>
+                <div class="title">{{ClientStatsCtrl.totalThisMonth}}</div>
+                <div class="comment">{{ 'CLIENT_STATS_BOX_THIS_MONTH' | translate }}</div>
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+
+</div>

@@ -1,0 +1,69 @@
+<!--
+  ~ Copyright (c) 2016 Kristjan Veskimae
+  ~
+  ~     Permission is hereby granted, free of charge, to any person obtaining
+  ~     a copy of this software and associated documentation files (the "Software"),
+  ~     to deal in the Software without restriction, including without limitation
+  ~     the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~     and/or sell copies of the Software, and to permit persons to whom the Software
+  ~     is furnished to do so, subject to the following conditions:
+  ~
+  ~     The above copyright notice and this permission notice shall be included in
+  ~     all copies or substantial portions of the Software.
+  ~
+  ~     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  ~     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  ~     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<div ng-controller="SettingsCtrl as SettingsCtrl" class="row">
+    <div class="row alerts-container" data-ng-show="AppData.alertsData.alerts.length">
+        <div class="col-xs-12">
+            <uib-alert data-ng-repeat="alert in AppData.alertsData.alerts" type="{{alert.type}}" close="AppData.alertsData.closeAlert($index)">{{alert.msg}}</uib-alert>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <rd-widget>
+                <rd-widget-header icon="fa-cog" title="{{ 'SETTINGS_HEADER_TEXT' | translate }}">
+                    <span class="help-tip" tooltip-placement="bottom" uib-tooltip="{{ 'SETTINGS_HEADER_TOOLTIP' | translate }}">&nbsp;</span>
+                    &nbsp;&nbsp;&nbsp;
+                    <button type="button" ng-click="reload();" class="btn btn-warning" tooltip-placement="bottom" uib-tooltip="{{ 'SETTINGS_RELOAD_BUTTON_TOOLTIP' | translate }}">{{ 'RELOAD_BUTTON' | translate }}</button>
+                    &nbsp;&nbsp;&nbsp;
+                    <button type="button" ng-click="SettingsCtrl.goToPhrases();" class="btn" ng-show="AppData.loginData.isReviewer">{{ 'PHRASES_BUTTON' | translate }}</button>
+                </rd-widget-header>
+                <rd-widget-body classes="widget-body large no-padding">
+                        <table class="table table-striped table-bordered table-responsive">
+                            <tr>
+                                <th class="shortColumn2">
+                                    <span tooltip-placement="right-top" uib-tooltip="{{ 'SETTINGS_TABLE_HEADER_SETTING_TYPE_TOOLTIP' | translate }}">{{ 'SETTINGS_TABLE_HEADER_SETTING_TYPE' | translate }}</span>
+                                </th>
+                                <th class="shortColumn2">
+                                    <span tooltip-placement="bottom" uib-tooltip="{{ 'SETTINGS_TABLE_HEADER_SETTING_VALUE_TOOLTIP' | translate }}">{{ 'SETTINGS_TABLE_HEADER_SETTING_VALUE' | translate }}</span>
+                                </th>
+                                <th class="shortColumn2">&nbsp;</th>
+                            </tr>
+                            <tr ng-repeat="setting in AppData.settingsData.allSettings | orderBy : 'settingType'">
+                                <td>
+                                    <span>{{setting.settingType}}</span>
+                                </td>
+                                <td>
+                                    <span ng-hide="SettingsCtrl.selectedSetting.item==setting">{{setting.value}}</span>
+                                    <input ng-show="SettingsCtrl.selectedSetting.item==setting" class="form-control" type="text" name="input" ng-model="setting.value">
+                                </td>
+                                <td>
+                                    <button ng-hide="SettingsCtrl.selectedSetting.item==setting" type="button" ng-click="SettingsCtrl.setSelectedSetting(setting);" class="btn btn-default">{{ 'CHANGE_BUTTON' | translate }}</button>
+                                    <button ng-show="SettingsCtrl.selectedSetting.item==setting" type="button" ng-click="SettingsCtrl.saveSetting(setting);" class="btn btn-success">{{ 'SAVE_BUTTON' | translate }}</button>
+                                    <button ng-show="SettingsCtrl.selectedSetting.item==setting" type="button" ng-click="SettingsCtrl.setSelectedSetting(null);" class="btn btn-default">{{ 'CANCEL_BUTTON' | translate }}</button>
+                                </td>
+                            </tr>
+                        </table>
+                </rd-widget-body>
+            </rd-widget>
+        </div>
+    </div>
+</div>

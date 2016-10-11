@@ -1,0 +1,122 @@
+<!--
+  ~ Copyright (c) 2016 Kristjan Veskimae
+  ~
+  ~     Permission is hereby granted, free of charge, to any person obtaining
+  ~     a copy of this software and associated documentation files (the "Software"),
+  ~     to deal in the Software without restriction, including without limitation
+  ~     the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~     and/or sell copies of the Software, and to permit persons to whom the Software
+  ~     is furnished to do so, subject to the following conditions:
+  ~
+  ~     The above copyright notice and this permission notice shall be included in
+  ~     all copies or substantial portions of the Software.
+  ~
+  ~     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  ~     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  ~     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<div ng-controller="PhrasesCtrl as PhrasesCtrl" >
+  <div class="row alerts-container" data-ng-show="AppData.alertsData.alerts.length">
+    <div class="col-xs-12">
+      <uib-alert data-ng-repeat="alert in AppData.alertsData.alerts" type="{{alert.type}}" close="AppData.alertsData.closeAlert($index)">{{alert.msg}}</uib-alert>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <rd-widget>
+        <rd-widget-header icon="fa-wrench" title="{{ 'PHRASES_HEADER_TEXT' | translate }}">
+          <button type="button" ng-click="reload();" class="btn btn-warning" tooltip-placement="bottom"  uib-tooltip="{{ 'PHRASES_RELOAD_BUTTON_TOOLTIP' | translate }}">{{ 'RELOAD_BUTTON' | translate }}</button>
+        </rd-widget-header>
+        <rd-widget-body classes="widget-body large no-padding">
+          <div class="container">
+            <table class="table">
+              <tr>
+                <td class="shortColumn2">
+                  <select
+                          name="localeSelect"
+                          id="localeSelect"
+                          ng-model="PhrasesCtrl.locale.selectedLocale"
+                          class="form-control"
+                          ng-change="PhrasesCtrl.updateLanguage()"
+                          ng-options="value.id as value.label for value in PhrasesCtrl.locales">
+                    <option>--</option>
+                  </select>
+
+                </td>
+                <td class="shortColumn2">
+                  <select
+                          name="paymentTypeSelect"
+                          id="paymentTypeSelect"
+                          ng-model="PhrasesCtrl.paymentType.selectedPaymentType"
+                          class="form-control"
+                          ng-change="PhrasesCtrl.updatePhraseType()"
+                          ng-options="value.id as value.label for value in PhrasesCtrl.activePaymentFieldTypes">
+                    <option>--</option>
+                  </select>
+                </td>
+              </tr>
+            </table>
+            <table class="table table-striped table-bordered table-responsive">
+              <tr>
+                <th class="extraWideColumn">
+                  <span tooltip-placement="right-top" uib-tooltip="{{ 'PHRASES_PHRASE_FIELD_LABEL_TOOLTIP' | translate }}">{{ 'PHRASES_PHRASE_FIELD_LABEL' | translate }}</span>
+                </th>
+                <th class="shortColumn2">
+                  <span tooltip-placement="bottom" uib-tooltip="{{ 'PHRASES_WEIGHT_FIELD_LABEL_TOOLTIP' | translate }}">{{ 'PHRASES_WEIGHT_FIELD_LABEL' | translate }}</span>
+                </th>
+                <th class="extraWideColumn">
+                  <span class="help-tip"  tooltip-placement="bottom" uib-tooltip="{{ 'PHRASES_EMPTY_COLUMN_TOOLTIP' | translate }}">&nbsp;</span>
+                </th>
+              </tr>
+              <tr>
+                <td>
+                  <input class="form-control" type="text" name="input" ng-model="PhrasesCtrl.phraseToAdd.keyPhrase">
+                </td>
+                <td>
+                  <select convert-to-number name="mySelect" ng-model="PhrasesCtrl.phraseToAdd.comparisonPart" class="form-control">
+                    <option>--</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                </td>
+                <td>
+                  <button ng-disabled="!PhrasesCtrl.phraseToAdd.keyPhrase || !PhrasesCtrl.phraseToAdd.comparisonPart || !PhrasesCtrl.locale.selectedLocale || !PhrasesCtrl.paymentType.selectedPaymentType" type="button"ng-click="PhrasesCtrl.addNewPhrase();" class="btn btn-primary"  uib-tooltip="{{ 'PHRASES_ADD_BUTTON_TOOLTIP' | translate }}">{{ 'ADD_BUTTON' | translate }}</button>
+                </td>
+              </tr>
+              <tr ng-repeat="phrase in PhrasesCtrl.phrases | orderBy : '-comparisonPart'">
+                <td>
+                  <span ng-hide="PhrasesCtrl.selectedPhrase==phrase">{{phrase.keyPhrase}}</span>
+                  <input class="form-control" ng-show="PhrasesCtrl.selectedPhrase==phrase" type="text" name="input" ng-model="phrase.keyPhrase">
+                </td>
+                <td>
+                  <span ng-hide="selectedPhrase==phrase">{{phrase.comparisonPart}}</span>
+                  <select convert-to-number ng-show="selectedPhrase==phrase" name="mySelect" id="mySelect" ng-model="phrase.comparisonPart" class="form-control">
+                    <option id="1" value="1">1</option>
+                    <option id="2" value="2">2</option>
+                    <option id="3" value="3">3</option>
+                    <option id="4" value="4">4</option>
+                    <option id="5" value="5">5</option>
+                  </select>
+                </td>
+                <td>
+                  <button ng-hide="PhrasesCtrl.selectedPhrase==phrase" type="button" ng-click="PhrasesCtrl.setSelectedPhrase(phrase);" class="btn btn-primary">{{ 'CHANGE_BUTTON' | translate }}</button>
+                  <button ng-show="PhrasesCtrl.selectedPhrase==phrase" type="button" ng-click="PhrasesCtrl.savePhrase(phrase);" class="btn btn-success">{{ 'SAVE_BUTTON' | translate }}</button>
+                  <button ng-show="PhrasesCtrl.selectedPhrase==phrase" type="button" ng-click="PhrasesCtrl.deletePhrase(phrase);" class="btn btn-danger">{{ 'DELETE_BUTTON' | translate }}</button>
+                  <button ng-show="PhrasesCtrl.selectedPhrase==phrase" type="button" ng-click="PhrasesCtrl.setSelectedPhrase(null);" class="btn btn-default">{{ 'CANCEL_BUTTON' | translate }}</button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </rd-widget-body>
+      </rd-widget>
+    </div>
+  </div>
+</div>

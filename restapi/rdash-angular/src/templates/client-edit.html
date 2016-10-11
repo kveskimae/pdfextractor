@@ -1,0 +1,90 @@
+<!--
+  ~ Copyright (c) 2016 Kristjan Veskimae
+  ~
+  ~     Permission is hereby granted, free of charge, to any person obtaining
+  ~     a copy of this software and associated documentation files (the "Software"),
+  ~     to deal in the Software without restriction, including without limitation
+  ~     the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~     and/or sell copies of the Software, and to permit persons to whom the Software
+  ~     is furnished to do so, subject to the following conditions:
+  ~
+  ~     The above copyright notice and this permission notice shall be included in
+  ~     all copies or substantial portions of the Software.
+  ~
+  ~     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  ~     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  ~     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<div ng-controller="ClientEditCtrl as ClientEditCtrl" class="row">
+    <div class="row alerts-container" data-ng-show="AppData.alertsData.alerts.length">
+        <div class="col-xs-12">
+            <uib-alert data-ng-repeat="alert in AppData.alertsData.alerts" type="{{alert.type}}" close="AppData.alertsData.closeAlert($index)">{{alert.msg}}</uib-alert>
+        </div>
+    </div>
+
+    <div class="col-lg-4" style="height:100%">
+        <rd-widget style="height:100%">
+            <rd-widget-header icon="fa-tasks" title="{{ClientEditCtrl.titleText}}">
+            </rd-widget-header>
+            <rd-widget-body classes="widget-body large no-padding" style="height:100%">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-responsive">
+                        <tbody class="animate">
+                        <tr>
+                            <td>
+                                <label for="username">{{ 'USERNAME_LABEL' | translate }} <span class="help-tip" tooltip-placement="bottom" uib-tooltip="{{ 'CLIENT_EDIT_USERNAME_TOOLTIP' | translate }}">&nbsp;</span></label>
+                                <input class="form-control" type="text" name="input" id="username" ng-model="ClientEditCtrl.client.username" required ng-pattern="ClientEditCtrl.usernamePattern">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="password">{{ 'PASSWORD_LABEL' | translate }} <span class="help-tip" tooltip-placement="bottom" uib-tooltip="{{ 'EDIT_PASSWORD_TOOLTIP' | translate }}">&nbsp;</span></label>
+                                <input class="form-control" type="text" id="password" name="input" ng-model="ClientEditCtrl.client.password" required ng-pattern="ClientEditCtrl.passwordPattern">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="email">{{ 'EMAIL_LABEL' | translate }}</label>
+                                <input class="form-control" type="email" id="email" name="input" ng-model="ClientEditCtrl.client.email" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;" class="text-left">
+                                <label for="accountEnabled">{{ 'ENABLED_LABEL' | translate }}</label>
+                                <input class="form-control" type="checkbox" id="accountEnabled" name="input" ng-model="ClientEditCtrl.client.enabled">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="accountType">{{ 'CLIENT_EDIT_ACCOUNT_TYPE_LABEL' | translate }}</label>
+                                <select name="mySelect" id="accountType" ng-model="ClientEditCtrl.client.accountType" class="form-control">
+                                    <option id="TRIAL" value="TRIAL">{{ 'CLIENT_EDIT_ACCOUNT_TYPE_OPTION_TRIAL' | translate }}</option>
+                                    <option id="REGULAR" value="REGULAR">{{ 'CLIENT_EDIT_ACCOUNT_TYPE_OPTION_REGULAR' | translate }}</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label data-ng-show="ClientEditCtrl.client.accountType=='TRIAL'" for="trialLimit">{{ 'CLIENT_EDIT_TRIAL_LIMIT_LABEL' | translate }}</label>
+                                <input data-ng-show="ClientEditCtrl.client.accountType=='TRIAL'" class="form-control" type="number" step="1" id="trialLimit" name="input" ng-model="ClientEditCtrl.client.trialLimit" min="0" max="100">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <button type="button" ng-click="ClientEditCtrl.saveClient(client);" ng-disabled="!ClientEditCtrl.client.username || !ClientEditCtrl.client.password || !ClientEditCtrl.client.email || !ClientEditCtrl.client.accountType" class="btn btn-success">{{ 'SAVE_BUTTON' | translate }}</button>
+                                <button type="button" ng-click="ClientEditCtrl.cancelEditing();" class="btn btn-default">{{ 'CANCEL_BUTTON' | translate }}</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+
+</div>

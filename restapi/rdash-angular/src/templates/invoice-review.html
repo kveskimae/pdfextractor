@@ -1,0 +1,120 @@
+<!--
+  ~ Copyright (c) 2016 Kristjan Veskimae
+  ~
+  ~     Permission is hereby granted, free of charge, to any person obtaining
+  ~     a copy of this software and associated documentation files (the "Software"),
+  ~     to deal in the Software without restriction, including without limitation
+  ~     the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~     and/or sell copies of the Software, and to permit persons to whom the Software
+  ~     is furnished to do so, subject to the following conditions:
+  ~
+  ~     The above copyright notice and this permission notice shall be included in
+  ~     all copies or substantial portions of the Software.
+  ~
+  ~     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  ~     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  ~     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  ~     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+  ~     OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<div ng-controller="InvoiceReviewCtrl as InvoiceReviewCtrl" class="row">
+    <div class="row alerts-container" data-ng-show="AppData.alertsData.alerts.length">
+        <div class="col-xs-12">
+            <uib-alert data-ng-repeat="alert in AppData.alertsData.alerts" type="{{alert.type}}" close="AppData.alertsData.closeAlert($index)">{{alert.msg}}</uib-alert>
+        </div>
+    </div>
+    <div class="col-lg-4" style="height:100%">
+        <rd-widget style="height:100%">
+            <rd-widget-header icon="fa-tasks" title="Invoice Workflow ID: {{InvoiceReviewCtrl.workflow.id}}">
+            </rd-widget-header>
+            <rd-widget-body classes="widget-body large no-padding" style="height:100%">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-responsive">
+                        <tbody class="animate">
+                        <tr>
+                            <td>
+                                <label for="extractedName">{{ 'INVOICE_REVIEW_NAME_LABEL' | translate }}</label>
+                                <input class="form-control" type="text" name="input" id="extractedName" ng-model="InvoiceReviewCtrl.workflow.extractedData.NAME">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="extractedTotalBeforeTaxes">
+                                    <span tooltip-placement="bottom" uib-tooltip="{{ 'INVOICE_REVIEW_TOTAL_BEFORE_TAXES_TOOLTIP' | translate }}">{{ 'INVOICE_REVIEW_TOTAL_BEFORE_TAXES_LABEL' | translate }}</span>
+                                </label>
+                                <input class="form-control" type="number" step="any" id="extractedTotalBeforeTaxes" name="input" ng-model="InvoiceReviewCtrl.workflow.extractedData.TOTAL_BEFORE_TAXES" min="0" max="5000">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="extractedTotalBeforeTaxes">
+                                    <span tooltip-placement="bottom" uib-tooltip="{{ 'INVOICE_REVIEW_TOTAL_TOOLTIP' | translate }}">{{ 'INVOICE_REVIEW_TOTAL_LABEL' | translate }}</span>
+                                </label>
+                                <input class="form-control" type="number" step="any" id="extractedTotal" name="input" ng-model="InvoiceReviewCtrl.workflow.extractedData.TOTAL" min="0" max="5000">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="extractedInvoiceID">{{ 'INVOICE_REVIEW_INVOICE_ID_LABEL' | translate }}</label>
+                                <input class="form-control" type="text" id="extractedInvoiceID" name="input" ng-model="InvoiceReviewCtrl.workflow.extractedData.INVOICE_ID">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="extractedIssueDate">{{ 'INVOICE_REVIEW_ISSUE_DATE_LABEL' | translate }}</label>
+                                <input type="date" id="extractedIssueDate" name="input" ng-model="InvoiceReviewCtrl.workflow.extractedData.ISSUE_DATE">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="extractedIssueDate">{{ 'INVOICE_REVIEW_VATIN_LABEL' | translate }}</label>
+                                <select class="form-control" id="extractedVATIN" ng-model="InvoiceReviewCtrl.workflow.selectedVatin" ng-options="opt for opt in InvoiceReviewCtrl.workflow.extractedData.VATIN"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="extractedNewVATIN">{{ 'INVOICE_REVIEW_ADD_VATIN_LABEL' | translate }}</label>
+                                <input class="form-control" type="text" id="extractedNewVATIN" name="input" ng-model="InvoiceReviewCtrl.newvatin.value">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <button ng-disabled="!InvoiceReviewCtrl.newvatin.value" type="button" ng-click="InvoiceReviewCtrl.addVatin();" class="btn btn-success">{{ 'ADD_BUTTON' | translate }}</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="extractedState">{{ 'INVOICE_REVIEW_STATE_LABEL' | translate }}</label>
+                                <select name="mySelect" id="extractedState" ng-model="InvoiceReviewCtrl.workflow.state" class="form-control">
+                                    <option id="pending_review" ng-selected="selected">pending_review</option>
+                                    <option id="completed">completed</option>
+                                    <option id="failed">failed</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <button type="button" ng-click="InvoiceReviewCtrl.saveWorkflow(InvoiceReviewCtrl.workflow);" class="btn btn-success">{{ 'SAVE_BUTTON' | translate }}</button>
+                                <button type="button" ng-click="InvoiceReviewCtrl.cancelEditing();" class="btn btn-default">{{ 'CANCEL_BUTTON' | translate }}</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+    <div class="col-lg-8" style="height:100%">
+        <rd-widget style="height:100%">
+            <rd-widget-header icon="fa-tasks" title="Invoice file">
+                <a href="/rest/invoicefile/{{InvoiceReviewCtrl.workflow.fileName}}" target="_blank">{{InvoiceReviewCtrl.workflow.fileName}}</a>
+            </rd-widget-header>
+            <rd-widget-body classes="widget-body large no-padding" style="height:100%">
+                <iframe ng-src="{{InvoiceReviewCtrl.getIframeSrc(InvoiceReviewCtrl.workflow.fileName)}}" style="width: 100%; height:1000px"></iframe>
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+</div>
