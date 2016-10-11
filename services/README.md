@@ -1,4 +1,4 @@
-# Data transfer objects module
+# Services module
 
 ## About
 
