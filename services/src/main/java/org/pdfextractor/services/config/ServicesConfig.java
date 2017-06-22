@@ -22,7 +22,7 @@
 
 package org.pdfextractor.services.config;
 
-import org.pdfextractor.services.finder.FinderPackageMarker;
+import finder.FinderPackageMarker;
 import org.pdfextractor.services.service.ServicePackageMarker;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
