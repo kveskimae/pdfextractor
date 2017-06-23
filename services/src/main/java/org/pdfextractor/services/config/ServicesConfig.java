@@ -26,7 +26,8 @@ import finder.FinderPackageMarker;
 import org.pdfextractor.services.service.ServicePackageMarker;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import phrase.PhrasePackageMarker;
 
 @Configuration
-@ComponentScan(basePackageClasses={ServicePackageMarker.class, FinderPackageMarker.class})
+@ComponentScan(basePackageClasses={ServicePackageMarker.class, FinderPackageMarker.class, PhrasePackageMarker.class})
 public class ServicesConfig {}
