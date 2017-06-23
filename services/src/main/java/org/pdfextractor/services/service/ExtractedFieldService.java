@@ -22,18 +22,21 @@
 
 package org.pdfextractor.services.service;
 
+import candidate.Candidate;
+import finder.FinderResult;
 import org.pdfextractor.db.dao.ExtractedFieldDao;
 import org.pdfextractor.db.domain.ExtractedField;
 import org.pdfextractor.db.domain.InvoiceWorkflow;
 import org.pdfextractor.db.domain.dictionary.PaymentFieldType;
 import org.pdfextractor.db.util.TimeHelper;
-import org.pdfextractor.services.finder.Candidate;
 import org.pdfextractor.db.domain.dictionary.SupportedLocales;
-import org.pdfextractor.services.finder.FinderResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import scala.collection.JavaConverters;
+import scala.collection.convert.Decorators;
+import scala.collection.convert.WrapAsJava;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -122,7 +125,7 @@ public class ExtractedFieldService {
 		}
 		if (finderResult.hasValuesForType(PaymentFieldType.VATIN)) {
 			StringBuilder sb = new StringBuilder();
-			Iterator<? extends Candidate> it = finderResult.getCandidates(PaymentFieldType.VATIN).iterator();
+			Iterator<? extends Candidate> it = JavaConverters.asJavaIterator(finderResult.getCandidates(PaymentFieldType.VATIN).iterator());
 			while (it.hasNext()) {
 				Candidate candidate = it.next();
 				sb.append((String)candidate.getValue());

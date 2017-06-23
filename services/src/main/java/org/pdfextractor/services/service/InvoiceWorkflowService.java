@@ -22,6 +22,7 @@
 
 package org.pdfextractor.services.service;
 
+import finder.FinderResult;
 import org.pdfextractor.db.dao.InvoiceWorkflowDao;
 import org.pdfextractor.db.domain.InvoiceWorkflow;
 import org.pdfextractor.db.domain.SecurityUser;
@@ -34,7 +35,6 @@ import org.pdfextractor.dto.composite.PollAnswerDTO;
 import org.pdfextractor.dto.domain.InvoiceWorkflowDTO;
 import org.pdfextractor.services.util.SecurityUtil;
 import org.pdfextractor.db.domain.dictionary.SupportedLocales;
-import org.pdfextractor.services.finder.FinderResult;
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.Mapper;
 import org.slf4j.Logger;

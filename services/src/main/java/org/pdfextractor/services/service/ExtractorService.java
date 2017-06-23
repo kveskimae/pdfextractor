@@ -22,9 +22,9 @@
 
 package org.pdfextractor.services.service;
 
+import finder.FinderFactory;
+import finder.FinderResult;
 import org.pdfextractor.db.domain.dictionary.SupportedLocales;
-import org.pdfextractor.services.finder.FinderFactory;
-import org.pdfextractor.services.finder.FinderResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
