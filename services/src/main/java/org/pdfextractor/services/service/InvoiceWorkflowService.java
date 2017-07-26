@@ -22,7 +22,7 @@
 
 package org.pdfextractor.services.service;
 
-import finder.FinderResult;
+import org.pdfextractor.algorithm.finder.FinderResult;
 import org.pdfextractor.db.dao.InvoiceWorkflowDao;
 import org.pdfextractor.db.domain.InvoiceWorkflow;
 import org.pdfextractor.db.domain.SecurityUser;

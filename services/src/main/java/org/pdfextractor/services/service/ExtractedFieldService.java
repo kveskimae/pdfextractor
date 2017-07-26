@@ -22,8 +22,8 @@
 
 package org.pdfextractor.services.service;
 
-import candidate.Candidate;
-import finder.FinderResult;
+import org.pdfextractor.algorithm.candidate.Candidate;
+import org.pdfextractor.algorithm.finder.FinderResult;
 import org.pdfextractor.db.dao.ExtractedFieldDao;
 import org.pdfextractor.db.domain.ExtractedField;
 import org.pdfextractor.db.domain.InvoiceWorkflow;
@@ -35,8 +35,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scala.collection.JavaConverters;
-import scala.collection.convert.Decorators;
-import scala.collection.convert.WrapAsJava;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -78,7 +76,7 @@ public class ExtractedFieldService {
 
 	public void saveExtractedFields(final FinderResult finderResult, final InvoiceWorkflow workflow) {
 		if (finderResult.hasValuesForType(PaymentFieldType.TOTAL)) {
-			Double total = finderResult.<Double>getValue(PaymentFieldType.TOTAL);
+			Double total = finderResult.<Double>getValue(PaymentFieldType.TOTAL).get();
 			ExtractedField totalEF = new ExtractedField();
 			totalEF.setInvoiceWorkflow(workflow);
 			totalEF.setPaymentFieldType(PaymentFieldType.TOTAL);
@@ -87,7 +85,7 @@ public class ExtractedFieldService {
 			// extractedFieldDao.saveAndFlush(totalEF);
 		}
 		if (finderResult.hasValuesForType(PaymentFieldType.TOTAL_BEFORE_TAXES)) {
-			Double totalBeforeTaxes = finderResult.<Double>getValue(PaymentFieldType.TOTAL_BEFORE_TAXES);
+			Double totalBeforeTaxes = finderResult.<Double>getValue(PaymentFieldType.TOTAL_BEFORE_TAXES).get();
 			ExtractedField totalBeforeTaxesEF = new ExtractedField();
 			totalBeforeTaxesEF.setInvoiceWorkflow(workflow);
 			totalBeforeTaxesEF.setPaymentFieldType(PaymentFieldType.TOTAL_BEFORE_TAXES);
@@ -96,7 +94,7 @@ public class ExtractedFieldService {
 			// extractedFieldDao.saveAndFlush(totalBeforeTaxesEF);
 		}
 		if (finderResult.hasValuesForType(PaymentFieldType.NAME)) {
-			String name = finderResult.<String>getValue(PaymentFieldType.NAME);
+			String name = finderResult.<String>getValue(PaymentFieldType.NAME).get();
 			ExtractedField nameEF = new ExtractedField();
 			nameEF.setInvoiceWorkflow(workflow);
 			nameEF.setPaymentFieldType(PaymentFieldType.NAME);
@@ -105,7 +103,7 @@ public class ExtractedFieldService {
 			// extractedFieldDao.saveAndFlush(nameEF);
 		}
 		if (finderResult.hasValuesForType(PaymentFieldType.INVOICE_ID)) {
-			String invoiceID = finderResult.<String>getValue(PaymentFieldType.INVOICE_ID);
+			String invoiceID = finderResult.<String>getValue(PaymentFieldType.INVOICE_ID).get();
 			ExtractedField invoiceIDEF = new ExtractedField();
 			invoiceIDEF.setInvoiceWorkflow(workflow);
 			invoiceIDEF.setPaymentFieldType(PaymentFieldType.INVOICE_ID);
@@ -114,7 +112,7 @@ public class ExtractedFieldService {
 			// extractedFieldDao.saveAndFlush(invoiceIDEF);
 		}
 		if (finderResult.hasValuesForType(PaymentFieldType.ISSUE_DATE)) {
-			Date issue = finderResult.<Date>getValue(PaymentFieldType.ISSUE_DATE);
+			Date issue = finderResult.<Date>getValue(PaymentFieldType.ISSUE_DATE).get();
 			String issueAsString = TimeHelper.format(issue);
 			ExtractedField issueEF = new ExtractedField();
 			issueEF.setInvoiceWorkflow(workflow);

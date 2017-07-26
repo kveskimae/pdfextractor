@@ -22,8 +22,8 @@
 
 package org.pdfextractor.services.service;
 
-import finder.FinderFactory;
-import finder.FinderResult;
+import org.pdfextractor.algorithm.finder.FinderFactory;
+import org.pdfextractor.algorithm.finder.FinderResult;
 import org.pdfextractor.db.domain.dictionary.SupportedLocales;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
